@@ -150,9 +150,8 @@ class AuthService extends ChangeNotifier {
     if (_currentUser != null) {
       await _loadUserModel(_currentUser!.uid);
     }
-    // Schedule notifyListeners to run after the current synchronous code
-    // to avoid "setState() called during build" error
-    Future.microtask(() => notifyListeners());
+    // Don't call notifyListeners() here as this is used in FutureBuilder
+    // The auth state listener will handle notifying listeners
   }
 
   /// Reset password
