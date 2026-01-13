@@ -47,7 +47,7 @@ app.*.map.json
 # Firebase
 google-services.json
 GoogleService-Info.plist
-firebase_options.dart
+# firebase_options.dart  # Commented out - needed for app to run
 
 # Environment
 .env
