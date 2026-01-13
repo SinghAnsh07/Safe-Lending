@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pointycastle/export.dart';
 
 import '../models/user_model.dart';
 import '../services/storage_service.dart';
@@ -29,7 +28,9 @@ class AuthService extends ChangeNotifier {
     } else {
       _currentUserModel = null;
     }
-    notifyListeners();
+    // Schedule notifyListeners to run after the current synchronous code
+    // to avoid "setState() called during build" error
+    Future.microtask(() => notifyListeners());
   }
 
   Future<void> _loadUserModel(String userId) async {
@@ -149,7 +150,9 @@ class AuthService extends ChangeNotifier {
     if (_currentUser != null) {
       await _loadUserModel(_currentUser!.uid);
     }
-    notifyListeners();
+    // Schedule notifyListeners to run after the current synchronous code
+    // to avoid "setState() called during build" error
+    Future.microtask(() => notifyListeners());
   }
 
   /// Reset password

@@ -38,7 +38,6 @@ class TPLNApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
             seedColor: AppColors.primary,
-            brightness: Brightness.light,
           ),
           textTheme: GoogleFonts.interTextTheme(),
           scaffoldBackgroundColor: AppColors.background,
@@ -63,23 +62,24 @@ class TPLNApp extends StatelessWidget {
             fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.border),
+              borderSide: const BorderSide(color: AppColors.border),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.border),
+              borderSide: const BorderSide(color: AppColors.border),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppColors.primary, width: 2),
+              borderSide: const BorderSide(color: AppColors.primary, width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
-          cardTheme: CardTheme(
+          cardTheme: CardThemeData(
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
-              side: BorderSide(color: AppColors.border),
+              side: const BorderSide(color: AppColors.border),
             ),
             color: Colors.white,
           ),
@@ -103,11 +103,11 @@ class AuthWrapper extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SplashScreen();
             }
-            
+
             if (authService.currentUser != null) {
               return const HomeScreen();
             }
-            
+
             return const LoginScreen();
           },
         );

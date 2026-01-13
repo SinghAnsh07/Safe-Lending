@@ -27,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [AppColors.primary, AppColors.primaryDark],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -121,10 +121,10 @@ class ProfileScreen extends StatelessWidget {
                     user.publicKey,
                   ),
                   const SizedBox(height: 12),
-                  Row(
+                  const Row(
                     children: [
                       Icon(Icons.security, size: 20, color: AppColors.success),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           'Your private key is stored securely on this device',
@@ -274,7 +274,7 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.textTertiary,
                   ),
@@ -310,7 +310,7 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   color: AppColors.textTertiary,
                 ),

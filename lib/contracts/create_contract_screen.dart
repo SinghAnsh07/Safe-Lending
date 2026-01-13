@@ -152,10 +152,10 @@ class _CreateContractScreenState extends State<CreateContractScreen> {
                     color: AppColors.info.withOpacity(0.3),
                   ),
                 ),
-                child: Row(
+                child: const Row(
                   children: [
                     Icon(Icons.info_outline, color: AppColors.info),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'This contract will be cryptographically signed by both parties',
@@ -297,7 +297,8 @@ class _CreateContractScreenState extends State<CreateContractScreen> {
                           width: 24,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : const Text(

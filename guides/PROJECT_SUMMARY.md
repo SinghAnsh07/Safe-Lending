@@ -9,7 +9,7 @@
 
 ## 📦 What Has Been Delivered
 
-### 1. **Core Cryptography** (100% Complete)
+### 1. **Core Cryptograp0hy** (100% Complete)
 - ✅ RSA-2048 key pair generation
 - ✅ Digital signature creation and verification
 - ✅ SHA-256 hashing for data integrity

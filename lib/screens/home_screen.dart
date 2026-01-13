@@ -33,7 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _selectedIndex == 0 ? 'Dashboard' : _selectedIndex == 1 ? 'Contracts' : 'Profile',
+          _selectedIndex == 0
+              ? 'Dashboard'
+              : _selectedIndex == 1
+                  ? 'Contracts'
+                  : 'Profile',
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         actions: [
@@ -115,7 +119,7 @@ class _DashboardTab extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [AppColors.primary, AppColors.primaryDark],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -198,7 +202,8 @@ class _DashboardTab extends StatelessWidget {
                   color: AppColors.accent,
                   onTap: () {
                     // Switch to contracts tab
-                    final homeState = context.findAncestorStateOfType<_HomeScreenState>();
+                    final homeState =
+                        context.findAncestorStateOfType<_HomeScreenState>();
                     homeState?.setState(() {
                       homeState._selectedIndex = 1;
                     });
@@ -321,7 +326,7 @@ class _ContractCard extends StatelessWidget {
         ),
         subtitle: Text(
           '${isLender ? 'To' : 'From'} $otherParty',
-          style: TextStyle(color: AppColors.textSecondary),
+          style: const TextStyle(color: AppColors.textSecondary),
         ),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -378,14 +383,14 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(32),
-      child: Column(
+      child: const Column(
         children: [
           Icon(
             Icons.description_outlined,
             size: 80,
             color: AppColors.textTertiary,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             'No contracts yet',
             style: TextStyle(
@@ -394,7 +399,7 @@ class _EmptyState extends StatelessWidget {
               color: AppColors.textSecondary,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'Create your first contract to get started',
             style: TextStyle(

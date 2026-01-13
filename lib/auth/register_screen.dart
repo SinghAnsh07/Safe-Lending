@@ -109,8 +109,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
-                
-                Text(
+
+                const Text(
                   'Join the trustless lending network',
                   style: TextStyle(
                     fontSize: 16,
@@ -119,7 +119,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Full Name Field
                 TextFormField(
                   controller: _fullNameController,
@@ -130,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Email Field
                 TextFormField(
                   controller: _emailController,
@@ -142,7 +142,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Phone Field
                 TextFormField(
                   controller: _phoneController,
@@ -154,7 +154,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Password Field
                 TextFormField(
                   controller: _passwordController,
@@ -176,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Confirm Password Field
                 TextFormField(
                   controller: _confirmPasswordController,
@@ -197,13 +197,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             : Icons.visibility_off_outlined,
                       ),
                       onPressed: () {
-                        setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
+                        setState(() =>
+                            _obscureConfirmPassword = !_obscureConfirmPassword);
                       },
                     ),
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Register Button
                 SizedBox(
                   height: 56,
@@ -215,7 +216,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             width: 24,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
                         : const Text(
@@ -228,12 +230,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Login Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       AppStrings.alreadyHaveAccount,
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
@@ -246,7 +248,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ],
                 ),
-                
+
                 // Key Generation Info
                 const SizedBox(height: 16),
                 Container(
@@ -258,7 +260,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       color: AppColors.success.withOpacity(0.3),
                     ),
                   ),
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
@@ -268,8 +270,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: AppColors.success,
                             size: 20,
                           ),
-                          const SizedBox(width: 8),
-                          const Text(
+                          SizedBox(width: 8),
+                          Text(
                             'Cryptographic Keys',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
@@ -278,7 +280,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         'A unique RSA-2048 key pair will be generated for you during registration. Your private key stays on your device.',
                         style: TextStyle(

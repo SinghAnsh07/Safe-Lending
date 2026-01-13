@@ -91,12 +91,12 @@ class _ContractsListScreenState extends State<ContractsListScreen>
     }
 
     if (snapshot.hasError) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error_outline, size: 64, color: AppColors.error),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Error loading contracts',
               style: TextStyle(color: AppColors.textSecondary),
@@ -107,7 +107,7 @@ class _ContractsListScreenState extends State<ContractsListScreen>
     }
 
     if (!snapshot.hasData || snapshot.data!.isEmpty) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -116,7 +116,7 @@ class _ContractsListScreenState extends State<ContractsListScreen>
               size: 80,
               color: AppColors.textTertiary,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'No contracts found',
               style: TextStyle(
@@ -125,7 +125,7 @@ class _ContractsListScreenState extends State<ContractsListScreen>
                 color: AppColors.textSecondary,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               'Create a new contract to get started',
               style: TextStyle(
@@ -218,7 +218,7 @@ class _ContractListItem extends StatelessWidget {
                         const SizedBox(height: 2),
                         Text(
                           '${isLender ? 'To' : 'From'} $otherParty',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 13,
                             color: AppColors.textSecondary,
                           ),
@@ -290,14 +290,14 @@ class _ContractListItem extends StatelessWidget {
                       children: [
                         Text(
                           '₹${contract.amountPaid.toStringAsFixed(0)} paid',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 11,
                             color: AppColors.textTertiary,
                           ),
                         ),
                         Text(
                           '₹${contract.remainingAmount.toStringAsFixed(0)} remaining',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 11,
                             color: AppColors.textTertiary,
                           ),
@@ -327,7 +327,7 @@ class _ContractListItem extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 11,
               color: AppColors.textSecondary,
             ),

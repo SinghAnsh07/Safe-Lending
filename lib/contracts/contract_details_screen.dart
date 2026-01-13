@@ -50,7 +50,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
 
   Future<void> _signContract(ContractModel contract) async {
     final contractService = context.read<ContractService>();
-    final success = await contractService.signContractAsBorrower(widget.contractId);
+    final success =
+        await contractService.signContractAsBorrower(widget.contractId);
 
     if (!mounted) return;
 
@@ -87,7 +88,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Amount (₹)',
-                hintText: 'Max: ₹${contract.remainingAmount.toStringAsFixed(2)}',
+                hintText:
+                    'Max: ₹${contract.remainingAmount.toStringAsFixed(2)}',
               ),
             ),
             const SizedBox(height: 16),
@@ -133,7 +135,9 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
       payerId: authService.currentUserModel!.id,
       payerName: authService.currentUserModel!.fullName,
       amount: amount,
-      notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+      notes: notesController.text.trim().isEmpty
+          ? null
+          : notesController.text.trim(),
     );
 
     if (!mounted) return;
@@ -218,7 +222,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                             ),
                             Text(
                               _getStatusDescription(contract.status),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 13,
                                 color: AppColors.textSecondary,
                               ),
@@ -243,11 +247,13 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Principal Amount',
-                                    style: TextStyle(color: AppColors.textSecondary),
+                                    style: TextStyle(
+                                        color: AppColors.textSecondary),
                                   ),
                                   Text(
                                     '₹${contract.amount.toStringAsFixed(2)}',
@@ -260,11 +266,13 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                               ),
                               const SizedBox(height: 8),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Interest (${contract.interestRate}%)',
-                                    style: TextStyle(color: AppColors.textSecondary),
+                                    style: const TextStyle(
+                                        color: AppColors.textSecondary),
                                   ),
                                   Text(
                                     '₹${(contract.amount * contract.interestRate / 100).toStringAsFixed(2)}',
@@ -277,7 +285,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                               ),
                               const Divider(height: 24),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text(
                                     'Total Amount',
@@ -355,11 +364,13 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                               const SizedBox(height: 16),
                               _buildTimelineRow(
                                 'Created',
-                                DateFormat('dd MMM yyyy, hh:mm a').format(contract.createdAt),
+                                DateFormat('dd MMM yyyy, hh:mm a')
+                                    .format(contract.createdAt),
                               ),
                               _buildTimelineRow(
                                 'Due Date',
-                                DateFormat('dd MMM yyyy').format(contract.dueDate),
+                                DateFormat('dd MMM yyyy')
+                                    .format(contract.dueDate),
                               ),
                             ],
                           ),
@@ -375,7 +386,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text(
                                     'Cryptographic Verification',
@@ -386,13 +398,18 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                                   ),
                                   if (_isVerified != null)
                                     Icon(
-                                      _isVerified! ? Icons.verified : Icons.error,
-                                      color: _isVerified! ? AppColors.success : AppColors.error,
+                                      _isVerified!
+                                          ? Icons.verified
+                                          : Icons.error,
+                                      color: _isVerified!
+                                          ? AppColors.success
+                                          : AppColors.error,
                                     ),
                                 ],
                               ),
                               const SizedBox(height: 16),
-                              _buildHashRow('Contract Hash', contract.contractHash),
+                              _buildHashRow(
+                                  'Contract Hash', contract.contractHash),
                               const SizedBox(height: 12),
                               Row(
                                 children: [
@@ -406,7 +423,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                                         : AppColors.warning,
                                   ),
                                   const SizedBox(width: 8),
-                                  Text(
+                                  const Text(
                                     'Lender Signature',
                                     style: TextStyle(
                                       color: AppColors.textSecondary,
@@ -428,7 +445,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                                         : AppColors.warning,
                                   ),
                                   const SizedBox(width: 8),
-                                  Text(
+                                  const Text(
                                     'Borrower Signature',
                                     style: TextStyle(
                                       color: AppColors.textSecondary,
@@ -448,7 +465,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                                       ? const SizedBox(
                                           width: 16,
                                           height: 16,
-                                          child: CircularProgressIndicator(strokeWidth: 2),
+                                          child: CircularProgressIndicator(
+                                              strokeWidth: 2),
                                         )
                                       : const Icon(Icons.verified_user),
                                   label: const Text('Verify Contract'),
@@ -491,7 +509,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                                     const SizedBox(height: 8),
                                     Text(
                                       contract.notes!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: AppColors.textSecondary,
                                       ),
                                     ),
@@ -504,7 +522,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
 
                       // Action Buttons
                       const SizedBox(height: 24),
-                      if (isBorrower && contract.status == ContractStatus.pending)
+                      if (isBorrower &&
+                          contract.status == ContractStatus.pending)
                         SizedBox(
                           width: double.infinity,
                           height: 56,
@@ -562,7 +581,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
             children: [
               Text(
                 role,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   color: AppColors.textTertiary,
                 ),
@@ -576,7 +595,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
               ),
               Text(
                 email,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                   color: AppColors.textSecondary,
                 ),
@@ -596,7 +615,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
         children: [
           Text(
             label,
-            style: TextStyle(color: AppColors.textSecondary),
+            style: const TextStyle(color: AppColors.textSecondary),
           ),
           Text(
             value,
@@ -613,7 +632,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12,
             color: AppColors.textTertiary,
           ),
@@ -746,7 +765,7 @@ class _RepaymentHistory extends StatelessWidget {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Text(
+                  return const Text(
                     'No repayments yet',
                     style: TextStyle(color: AppColors.textSecondary),
                   );
@@ -760,7 +779,7 @@ class _RepaymentHistory extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 12),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.payment,
                             color: AppColors.success,
                             size: 20,
@@ -779,7 +798,7 @@ class _RepaymentHistory extends StatelessWidget {
                                 Text(
                                   DateFormat('dd MMM yyyy, hh:mm a')
                                       .format(repayment.paymentDate),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.textSecondary,
                                   ),

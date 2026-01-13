@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 60),
-                
+
                 // Logo
                 Container(
                   width: 100,
@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Title
                 const Text(
                   'Welcome Back',
@@ -94,8 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
-                
-                Text(
+
+                const Text(
                   'Sign in to continue',
                   style: TextStyle(
                     fontSize: 16,
@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 48),
-                
+
                 // Email Field
                 TextFormField(
                   controller: _emailController,
@@ -116,12 +116,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Password Field
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
-                  validator: (value) => Validators.validateRequired(value, 'Password'),
+                  validator: (value) =>
+                      Validators.validateRequired(value, 'Password'),
                   decoration: InputDecoration(
                     labelText: AppStrings.password,
                     prefixIcon: const Icon(Icons.lock_outlined),
@@ -138,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Login Button
                 SizedBox(
                   height: 56,
@@ -150,7 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: 24,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
                         : const Text(
@@ -163,12 +165,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Register Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       AppStrings.dontHaveAccount,
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
@@ -188,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                
+
                 // Security Info
                 const SizedBox(height: 32),
                 Container(
@@ -200,14 +202,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: AppColors.info.withOpacity(0.3),
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     children: [
                       Icon(
                         Icons.security,
                         color: AppColors.info,
                         size: 24,
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           'Your private keys are stored securely on your device and never sent to our servers.',

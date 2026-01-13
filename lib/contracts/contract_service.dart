@@ -57,7 +57,6 @@ class ContractService extends ChangeNotifier {
         dueDate: dueDate,
         contractHash: contractHash,
         lenderSignature: lenderSignature,
-        borrowerSignature: null,
         status: ContractStatus.pending,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -65,9 +64,8 @@ class ContractService extends ChangeNotifier {
       );
 
       // Save to Firestore
-      final docRef = await _firestore
-          .collection('contracts')
-          .add(contract.toFirestore());
+      final docRef =
+          await _firestore.collection('contracts').add(contract.toFirestore());
 
       notifyListeners();
       return docRef.id; // Return contract ID
@@ -81,7 +79,8 @@ class ContractService extends ChangeNotifier {
   Future<bool> signContractAsBorrower(String contractId) async {
     try {
       // Get contract
-      final doc = await _firestore.collection('contracts').doc(contractId).get();
+      final doc =
+          await _firestore.collection('contracts').doc(contractId).get();
       if (!doc.exists) {
         return false;
       }
@@ -152,9 +151,8 @@ class ContractService extends ChangeNotifier {
           .get();
 
       final allDocs = [...lenderSnapshot.docs, ...borrowerSnapshot.docs];
-      final contracts = allDocs
-          .map((doc) => ContractModel.fromFirestore(doc))
-          .toList();
+      final contracts =
+          allDocs.map((doc) => ContractModel.fromFirestore(doc)).toList();
 
       // Sort by creation date
       contracts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
@@ -165,7 +163,8 @@ class ContractService extends ChangeNotifier {
   /// Get single contract
   Future<ContractModel?> getContract(String contractId) async {
     try {
-      final doc = await _firestore.collection('contracts').doc(contractId).get();
+      final doc =
+          await _firestore.collection('contracts').doc(contractId).get();
       if (doc.exists) {
         return ContractModel.fromFirestore(doc);
       }
@@ -195,10 +194,8 @@ class ContractService extends ChangeNotifier {
       }
 
       // Get lender's public key
-      final lenderDoc = await _firestore
-          .collection('users')
-          .doc(contract.lenderId)
-          .get();
+      final lenderDoc =
+          await _firestore.collection('users').doc(contract.lenderId).get();
       if (!lenderDoc.exists) {
         return false;
       }
@@ -220,16 +217,15 @@ class ContractService extends ChangeNotifier {
 
       // Verify borrower signature if exists
       if (contract.borrowerSignature != null) {
-        final borrowerDoc = await _firestore
-            .collection('users')
-            .doc(contract.borrowerId)
-            .get();
+        final borrowerDoc =
+            await _firestore.collection('users').doc(contract.borrowerId).get();
         if (!borrowerDoc.exists) {
           return false;
         }
 
         final borrowerPublicKeyPem = borrowerDoc.data()!['publicKey'] as String;
-        final borrowerPublicKey = RSAService.publicKeyFromPem(borrowerPublicKeyPem);
+        final borrowerPublicKey =
+            RSAService.publicKeyFromPem(borrowerPublicKeyPem);
 
         final borrowerSigValid = SignatureService.verifyContractSignature(
           contractHash: contract.contractHash,
@@ -251,7 +247,8 @@ class ContractService extends ChangeNotifier {
   /// Cancel contract (only if pending)
   Future<bool> cancelContract(String contractId) async {
     try {
-      final doc = await _firestore.collection('contracts').doc(contractId).get();
+      final doc =
+          await _firestore.collection('contracts').doc(contractId).get();
       if (!doc.exists) {
         return false;
       }
