@@ -14,9 +14,18 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+
+  try {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    }
+  } catch (e) {
+    // Firebase already initialized, ignore error
+    debugPrint('Firebase initialization: $e');
+  }
+
   runApp(const TPLNApp());
 }
 
@@ -50,7 +59,8 @@ class TPLNApp extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -70,10 +80,11 @@ class TPLNApp extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primary, width: 2),
+              borderSide:
+              const BorderSide(color: AppColors.primary, width: 2),
             ),
             contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
           cardTheme: CardThemeData(
             elevation: 0,
@@ -96,21 +107,19 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthService>(
-      builder: (context, authService, _) {
-        return FutureBuilder(
-          future: authService.checkAuthState(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const SplashScreen();
-            }
+      builder: (context, auth, _) {
+        // Not logged in
+        if (auth.currentUser == null) {
+          return const LoginScreen();
+        }
 
-            if (authService.currentUser != null) {
-              return const HomeScreen();
-            }
+        // Logged in but Firestore user still loading
+        if (auth.isLoading || auth.currentUserModel == null) {
+          return const SplashScreen();
+        }
 
-            return const LoginScreen();
-          },
-        );
+        // Fully authenticated
+        return const HomeScreen();
       },
     );
   }

@@ -12,10 +12,12 @@ class AuthService extends ChangeNotifier {
 
   User? _currentUser;
   UserModel? _currentUserModel;
+  bool _isLoadingUserModel = false;
 
   User? get currentUser => _currentUser;
   UserModel? get currentUserModel => _currentUserModel;
   bool get isAuthenticated => _currentUser != null;
+  bool get isLoading => _isLoadingUserModel;
 
   AuthService() {
     _auth.authStateChanges().listen(_onAuthStateChanged);
@@ -23,28 +25,40 @@ class AuthService extends ChangeNotifier {
 
   Future<void> _onAuthStateChanged(User? user) async {
     _currentUser = user;
-    if (user != null) {
-      await _loadUserModel(user.uid);
-    } else {
+
+    if (user == null) {
       _currentUserModel = null;
+      notifyListeners();
+      return;
     }
-    // Schedule notifyListeners to run after the current synchronous code
-    // to avoid "setState() called during build" error
-    Future.microtask(() => notifyListeners());
+
+    _isLoadingUserModel = true;
+    notifyListeners();
+
+    await _loadUserModel(user.uid);
+
+    _isLoadingUserModel = false;
+    notifyListeners();
   }
 
   Future<void> _loadUserModel(String userId) async {
     try {
-      final doc = await _firestore.collection('users').doc(userId).get();
+      final doc =
+      await _firestore.collection('users').doc(userId).get();
+
       if (doc.exists) {
         _currentUserModel = UserModel.fromFirestore(doc);
+      } else {
+        _currentUserModel = null;
       }
     } catch (e) {
       debugPrint('Error loading user model: $e');
+      _currentUserModel = null;
     }
   }
 
-  /// Register new user
+  // ================= AUTH ACTIONS =================
+
   Future<String?> register({
     required String email,
     required String password,
@@ -52,28 +66,25 @@ class AuthService extends ChangeNotifier {
     required String phoneNumber,
   }) async {
     try {
-      // Create Firebase Auth user
-      final userCredential = await _auth.createUserWithEmailAndPassword(
+      final userCredential =
+      await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       final user = userCredential.user;
-      if (user == null) {
-        return 'Failed to create user';
-      }
+      if (user == null) return 'Failed to create user';
 
-      // Generate RSA key pair
       final keyPair = RSAService.generateKeyPair();
-      final publicKeyPem = RSAService.publicKeyToPem(keyPair.publicKey);
-      final privateKeyPem = RSAService.privateKeyToPem(keyPair.privateKey);
+      final publicKeyPem =
+      RSAService.publicKeyToPem(keyPair.publicKey);
+      final privateKeyPem =
+      RSAService.privateKeyToPem(keyPair.privateKey);
 
-      // Save private key securely on device
       await StorageService.savePrivateKey(privateKeyPem);
       await StorageService.savePublicKey(publicKeyPem);
       await StorageService.saveUserId(user.uid);
 
-      // Create user document in Firestore
       final userModel = UserModel(
         id: user.uid,
         email: email,
@@ -89,84 +100,87 @@ class AuthService extends ChangeNotifier {
           .doc(user.uid)
           .set(userModel.toFirestore());
 
-      _currentUserModel = userModel;
-      notifyListeners();
-
-      return null; // Success
+      return null;
     } on FirebaseAuthException catch (e) {
-      return _getAuthErrorMessage(e);
+      return _authError(e);
     } catch (e) {
       return 'Registration failed: $e';
     }
   }
 
-  /// Login user
   Future<String?> login({
     required String email,
     required String password,
   }) async {
     try {
-      final userCredential = await _auth.signInWithEmailAndPassword(
+      final userCredential =
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       final user = userCredential.user;
-      if (user == null) {
-        return 'Login failed';
-      }
+      if (user == null) return 'Login failed';
 
-      // Load user data
-      await _loadUserModel(user.uid);
       await StorageService.saveUserId(user.uid);
 
-      // Check if keys exist locally
       final hasKeys = await StorageService.hasKeys();
       if (!hasKeys) {
-        // Keys might be lost, need to regenerate or recover
         return 'Security keys not found. Please contact support.';
       }
 
-      return null; // Success
+      return null;
     } on FirebaseAuthException catch (e) {
-      return _getAuthErrorMessage(e);
+      return _authError(e);
     } catch (e) {
       return 'Login failed: $e';
     }
   }
 
-  /// Logout user
   Future<void> logout() async {
     await _auth.signOut();
     await StorageService.clearAllData();
+
     _currentUser = null;
     _currentUserModel = null;
+
     notifyListeners();
   }
 
-  /// Check auth state
-  Future<void> checkAuthState() async {
-    _currentUser = _auth.currentUser;
-    if (_currentUser != null) {
-      await _loadUserModel(_currentUser!.uid);
-    }
-    // Don't call notifyListeners() here as this is used in FutureBuilder
-    // The auth state listener will handle notifying listeners
-  }
-
-  /// Reset password
   Future<String?> resetPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
-      return null; // Success
+      return null;
     } on FirebaseAuthException catch (e) {
-      return _getAuthErrorMessage(e);
+      return _authError(e);
     } catch (e) {
-      return 'Failed to send reset email: $e';
+      return 'Failed to send reset email';
     }
   }
 
-  /// Get user by email
+  // ================= HELPERS =================
+
+  String _authError(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'weak-password':
+        return 'The password is too weak';
+      case 'email-already-in-use':
+        return 'An account already exists with this email';
+      case 'user-not-found':
+        return 'No user found with this email';
+      case 'wrong-password':
+        return 'Incorrect password';
+      case 'invalid-email':
+        return 'Invalid email address';
+      case 'user-disabled':
+        return 'This account has been disabled';
+      case 'too-many-requests':
+        return 'Too many attempts. Try again later';
+      default:
+        return e.message ?? 'Authentication error';
+    }
+  }
+
   Future<UserModel?> getUserByEmail(String email) async {
     try {
       final querySnapshot = await _firestore
@@ -186,38 +200,19 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  /// Get user by ID
   Future<UserModel?> getUserById(String userId) async {
     try {
-      final doc = await _firestore.collection('users').doc(userId).get();
-      if (doc.exists) {
-        return UserModel.fromFirestore(doc);
+      final doc =
+      await _firestore.collection('users').doc(userId).get();
+
+      if (!doc.exists) {
+        return null;
       }
-      return null;
+
+      return UserModel.fromFirestore(doc);
     } catch (e) {
       debugPrint('Error getting user by ID: $e');
       return null;
-    }
-  }
-
-  String _getAuthErrorMessage(FirebaseAuthException e) {
-    switch (e.code) {
-      case 'weak-password':
-        return 'The password is too weak';
-      case 'email-already-in-use':
-        return 'An account already exists with this email';
-      case 'user-not-found':
-        return 'No user found with this email';
-      case 'wrong-password':
-        return 'Incorrect password';
-      case 'invalid-email':
-        return 'Invalid email address';
-      case 'user-disabled':
-        return 'This account has been disabled';
-      case 'too-many-requests':
-        return 'Too many attempts. Please try again later';
-      default:
-        return 'Authentication error: ${e.message}';
     }
   }
 }

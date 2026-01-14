@@ -37,6 +37,19 @@ A Cryptographically Secure Informal Lending System
    flutter run
    ```
 
+## 📚 Documentation
+
+**👉 For comprehensive guides, see the [`docs/`](docs/) folder:**
+
+- **[START_HERE.md](docs/START_HERE.md)** - Quick start & project overview
+- **[SETUP_GUIDE.md](docs/SETUP_GUIDE.md)** - Detailed setup instructions
+- **[TESTING_GUIDE.md](docs/TESTING_GUIDE.md)** - Testing procedures
+- **[QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md)** - Command reference
+- **[PROJECT_ANALYSIS.md](docs/PROJECT_ANALYSIS.md)** - Technical analysis
+- **[PROJECT_STATUS.md](docs/PROJECT_STATUS.md)** - Current status & metrics
+
+**New to the project?** Start with **[docs/START_HERE.md](docs/START_HERE.md)**
+
 ## 📱 Features
 
 - ✅ User Authentication (Email/Phone)
