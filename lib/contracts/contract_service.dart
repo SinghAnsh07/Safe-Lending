@@ -78,26 +78,36 @@ class ContractService extends ChangeNotifier {
   /// Sign contract as borrower
   Future<bool> signContractAsBorrower(String contractId) async {
     try {
+      debugPrint('Starting contract signing for contract: $contractId');
+
       // Get contract
       final doc =
           await _firestore.collection('contracts').doc(contractId).get();
       if (!doc.exists) {
+        debugPrint('Error: Contract not found');
         return false;
       }
+      debugPrint('Contract found successfully');
 
       final contract = ContractModel.fromFirestore(doc);
+      debugPrint('Contract parsed: ${contract.contractHash}');
 
       // Get borrower's private key
       final privateKeyPem = await StorageService.getPrivateKey();
       if (privateKeyPem == null) {
+        debugPrint('Error: Private key not found in secure storage');
         return false;
       }
+      debugPrint('Private key retrieved successfully');
 
       final privateKey = RSAService.privateKeyFromPem(privateKeyPem);
+      debugPrint('Private key parsed successfully');
+
       final borrowerSignature = SignatureService.signContract(
         contractHash: contract.contractHash,
         privateKey: privateKey,
       );
+      debugPrint('Signature generated: $borrowerSignature');
 
       // Update contract with borrower signature
       await _firestore.collection('contracts').doc(contractId).update({
@@ -105,11 +115,13 @@ class ContractService extends ChangeNotifier {
         'status': ContractStatus.active.name,
         'updatedAt': Timestamp.now(),
       });
+      debugPrint('Contract updated successfully in Firestore');
 
       notifyListeners();
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
       debugPrint('Error signing contract: $e');
+      debugPrint('Stack trace: $stackTrace');
       return false;
     }
   }

@@ -17,22 +17,36 @@ class RepaymentService extends ChangeNotifier {
     String? notes,
   }) async {
     try {
+      debugPrint('Starting repayment process for contract: $contractId');
+      debugPrint('Amount: ₹$amount, Payer: $payerName');
+
       // Get contract
-      final contractDoc = await _firestore
-          .collection('contracts')
-          .doc(contractId)
-          .get();
+      final contractDoc =
+          await _firestore.collection('contracts').doc(contractId).get();
 
       if (!contractDoc.exists) {
+        debugPrint('Error: Contract not found');
         return false;
       }
+      debugPrint('Contract found successfully');
 
       final contract = ContractModel.fromFirestore(contractDoc);
+      debugPrint('Contract status: ${contract.status.name}');
+      debugPrint('Remaining amount: ₹${contract.remainingAmount}');
 
       // Validate amount
-      if (amount <= 0 || amount > contract.remainingAmount) {
+      if (amount <= 0) {
+        debugPrint('Error: Invalid amount (must be > 0)');
         return false;
       }
+
+      if (amount > contract.remainingAmount) {
+        debugPrint('Error: Amount exceeds remaining balance');
+        debugPrint(
+            'Requested: ₹$amount, Available: ₹${contract.remainingAmount}');
+        return false;
+      }
+      debugPrint('Amount validation passed');
 
       // Generate repayment hash
       final paymentDate = DateTime.now();
@@ -42,6 +56,7 @@ class RepaymentService extends ChangeNotifier {
         amount: amount,
         paymentDate: paymentDate,
       );
+      debugPrint('Transaction hash generated: $transactionHash');
 
       // Create repayment record
       final repayment = RepaymentModel(
@@ -57,26 +72,29 @@ class RepaymentService extends ChangeNotifier {
       );
 
       // Save repayment
-      await _firestore
-          .collection('repayments')
-          .add(repayment.toFirestore());
+      await _firestore.collection('repayments').add(repayment.toFirestore());
+      debugPrint('Repayment record saved to Firestore');
 
       // Update contract
       final newAmountPaid = contract.amountPaid + amount;
       final isFullyPaid = newAmountPaid >= contract.totalAmount;
+      debugPrint('New amount paid: ₹$newAmountPaid / ₹${contract.totalAmount}');
+      debugPrint('Fully paid: $isFullyPaid');
 
       await _firestore.collection('contracts').doc(contractId).update({
         'amountPaid': newAmountPaid,
-        'status': isFullyPaid
-            ? ContractStatus.completed.name
-            : contract.status.name,
+        'status':
+            isFullyPaid ? ContractStatus.completed.name : contract.status.name,
         'updatedAt': Timestamp.now(),
       });
+      debugPrint('Contract updated successfully');
 
       notifyListeners();
+      debugPrint('Repayment completed successfully!');
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
       debugPrint('Error making repayment: $e');
+      debugPrint('Stack trace: $stackTrace');
       return false;
     }
   }

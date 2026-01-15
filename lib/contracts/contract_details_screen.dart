@@ -49,11 +49,23 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
   }
 
   Future<void> _signContract(ContractModel contract) async {
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
     final contractService = context.read<ContractService>();
     final success =
         await contractService.signContractAsBorrower(widget.contractId);
 
     if (!mounted) return;
+
+    // Dismiss loading indicator
+    Navigator.of(context).pop();
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -65,8 +77,9 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Failed to sign contract'),
+          content: Text('Failed to sign contract. Check console for details.'),
           backgroundColor: AppColors.error,
+          duration: Duration(seconds: 4),
         ),
       );
     }
@@ -127,6 +140,27 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
       return;
     }
 
+    if (amount > contract.remainingAmount) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Amount exceeds remaining balance of ₹${contract.remainingAmount.toStringAsFixed(2)}',
+          ),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
     final authService = context.read<AuthService>();
     final repaymentService = context.read<RepaymentService>();
 
@@ -142,6 +176,9 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
 
     if (!mounted) return;
 
+    // Dismiss loading indicator
+    Navigator.of(context).pop();
+
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -152,8 +189,10 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Failed to record repayment'),
+          content:
+              Text('Failed to record repayment. Check console for details.'),
           backgroundColor: AppColors.error,
+          duration: Duration(seconds: 4),
         ),
       );
     }

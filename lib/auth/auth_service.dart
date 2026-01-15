@@ -43,8 +43,7 @@ class AuthService extends ChangeNotifier {
 
   Future<void> _loadUserModel(String userId) async {
     try {
-      final doc =
-      await _firestore.collection('users').doc(userId).get();
+      final doc = await _firestore.collection('users').doc(userId).get();
 
       if (doc.exists) {
         _currentUserModel = UserModel.fromFirestore(doc);
@@ -66,8 +65,7 @@ class AuthService extends ChangeNotifier {
     required String phoneNumber,
   }) async {
     try {
-      final userCredential =
-      await _auth.createUserWithEmailAndPassword(
+      final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -76,10 +74,8 @@ class AuthService extends ChangeNotifier {
       if (user == null) return 'Failed to create user';
 
       final keyPair = RSAService.generateKeyPair();
-      final publicKeyPem =
-      RSAService.publicKeyToPem(keyPair.publicKey);
-      final privateKeyPem =
-      RSAService.privateKeyToPem(keyPair.privateKey);
+      final publicKeyPem = RSAService.publicKeyToPem(keyPair.publicKey);
+      final privateKeyPem = RSAService.privateKeyToPem(keyPair.privateKey);
 
       await StorageService.savePrivateKey(privateKeyPem);
       await StorageService.savePublicKey(publicKeyPem);
@@ -113,8 +109,7 @@ class AuthService extends ChangeNotifier {
     required String password,
   }) async {
     try {
-      final userCredential =
-      await _auth.signInWithEmailAndPassword(
+      final userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -155,6 +150,14 @@ class AuthService extends ChangeNotifier {
       return _authError(e);
     } catch (e) {
       return 'Failed to send reset email';
+    }
+  }
+
+  /// Reload current user model from Firestore
+  Future<void> reloadUserModel() async {
+    if (_currentUser != null) {
+      await _loadUserModel(_currentUser!.uid);
+      notifyListeners();
     }
   }
 
@@ -202,8 +205,7 @@ class AuthService extends ChangeNotifier {
 
   Future<UserModel?> getUserById(String userId) async {
     try {
-      final doc =
-      await _firestore.collection('users').doc(userId).get();
+      final doc = await _firestore.collection('users').doc(userId).get();
 
       if (!doc.exists) {
         return null;

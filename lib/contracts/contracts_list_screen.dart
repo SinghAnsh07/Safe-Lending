@@ -91,15 +91,26 @@ class _ContractsListScreenState extends State<ContractsListScreen>
     }
 
     if (snapshot.hasError) {
-      return const Center(
+      debugPrint('Error loading contracts: ${snapshot.error}');
+      debugPrint('Stack trace: ${snapshot.stackTrace}');
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: AppColors.error),
-            SizedBox(height: 16),
-            Text(
+            const Icon(Icons.error_outline, size: 64, color: AppColors.error),
+            const SizedBox(height: 16),
+            const Text(
               'Error loading contracts',
               style: TextStyle(color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '${snapshot.error}',
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.textTertiary,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
