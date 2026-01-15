@@ -32,8 +32,6 @@
 
 </div>
 
-> **Note:** Add your app screenshots to the `screenshots/` folder with the names shown above.
-
 ---
 
 ## ✨ Features
@@ -345,28 +343,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-**TPLN Team**
-
-- Project Lead: [Your Name]
-- Developer: [Your Name]
-
----
-
-## 🙏 Acknowledgments
-
-- Flutter team for the amazing framework
-- Firebase for backend services
-- pointycastle package for cryptography
-- flutter_secure_storage for secure key storage
+Project Lead: Ansh Singh
 
 ---
 
 <div align="center">
 
 ### ⭐ Star this repo if you find it helpful!
-
-**Made with ❤️ by TPLN**
-
-[Report Bug](https://github.com/yourusername/safe-lending/issues) • [Request Feature](https://github.com/yourusername/safe-lending/issues)
-
 </div>
